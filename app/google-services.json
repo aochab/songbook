@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "460478804729",
+    "firebase_url": "https://songbook-319fa.firebaseio.com",
+    "project_id": "songbook-319fa",
+    "storage_bucket": "songbook-319fa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:460478804729:android:2c5f0389c367d8ac5d6828",
+        "android_client_info": {
+          "package_name": "aochab.songbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "460478804729-n5aafqbgvhd8qc73skf0hd7e816hsnef.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANa8tB3fnXy4ucaBXz_lJxf0KYR6lxTfE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "460478804729-n5aafqbgvhd8qc73skf0hd7e816hsnef.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

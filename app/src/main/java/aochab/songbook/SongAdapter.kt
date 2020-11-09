@@ -6,10 +6,73 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter
+import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import kotlinx.android.synthetic.main.song_item.view.*
 
+class SongAdapter(options: FirestoreRecyclerOptions<Song>) :
+    FirestoreRecyclerAdapter<Song, SongAdapter.SongViewHolder>(
+        options
+    ) {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(
+            R.layout.song_item,
+            parent, false
+        )
+        return SongViewHolder(itemView)
+    }
+
+    override fun onBindViewHolder(holder: SongViewHolder, position: Int, model: Song) {
+        holder.imageView.setImageResource(model.imageResource)
+        holder.songTitle.text = model.title
+        holder.songwriter.text = model.songwriter
+    }
+
+    inner class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val imageView: ImageView = itemView.image_view
+        val songTitle: TextView = itemView.song_title
+        val songwriter: TextView = itemView.songwriter
+    }
+}
+/*
+class SongAdapter( private val songList: List<Song>) : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
+    private val TAG = "SongAdapter"
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(
+            R.layout.song_item,
+            parent, false
+        )
+        return SongViewHolder(itemView)
+    }
+
+    override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
+        val currentItem = songList[position]
+
+        holder.imageView.setImageResource(currentItem.imageResource)
+        holder.songTitle.text = currentItem.title
+        holder.songwriter.text = currentItem.songwriter
+    }
+
+    override fun getItemCount() = songList.size
+
+    inner class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val imageView: ImageView = itemView.image_view
+        val songTitle: TextView = itemView.song_title
+        val songwriter: TextView = itemView.songwriter
+
+        init {
+            super.itemView
+        }
+    }
+
+}
+*/
+
+/*
 class SongAdapter(
-    private val songList: List<SongItem>,
+    private val songList: List<Song>,
     private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
 
@@ -26,17 +89,17 @@ class SongAdapter(
         val currentItem = songList[position]
 
         holder.imageView.setImageResource(currentItem.imageResource)
-        holder.textView1.text = currentItem.text1
-        holder.textView2.text = currentItem.text2
+        holder.songTitle.text = currentItem.title
+        holder.songwriter.text = currentItem.songwriter
     }
 
     override fun getItemCount() = songList.size
 
     inner class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
-        View.OnClickListener {
+        View.OnClickListener { b
         val imageView: ImageView = itemView.image_view
-        val textView1: TextView = itemView.text_view_1
-        val textView2: TextView = itemView.text_view_2
+        val songTitle: TextView = itemView.song_title
+        val songwriter: TextView = itemView.songwriter
 
         init {
             itemView.setOnClickListener(this)
@@ -44,7 +107,7 @@ class SongAdapter(
 
         override fun onClick(p0: View?) {
             val position = adapterPosition
-            if (position != RecyclerView.NO_POSITION){
+            if (position != RecyclerView.NO_POSITION) {
                 listener.onItemClick(position)
             }
         }
@@ -54,3 +117,4 @@ class SongAdapter(
         fun onItemClick(position: Int)
     }
 }
+*/
