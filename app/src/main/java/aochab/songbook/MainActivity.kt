@@ -1,8 +1,11 @@
 package aochab.songbook
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -57,8 +60,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val currentUser = auth.currentUser
         if(currentUser != null) {
             updateUI(currentUser)
+        } else {
+            googleSignInClient.signOut()
         }
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -141,10 +145,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
             val intent = Intent(this, SonglistActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         } else {
             Toast.makeText(this,"Authentication failed",Toast.LENGTH_LONG).show()
         }
     }
+
 }
 
