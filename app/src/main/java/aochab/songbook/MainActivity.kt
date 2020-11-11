@@ -1,146 +1,150 @@
 package aochab.songbook
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.firebase.firestore.ktx.firestore
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.view.*
 
+internal const val RC_SIGN_IN = 9001
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
+
+    private lateinit var auth: FirebaseAuth
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     companion object {
         val TAG = "MainActivity"
     }
 
-    private val songsCollectionRef = Firebase.firestore.collection("songs")
-    private lateinit var adapter: SongAdapter
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setUpRecyclerView();
+        google_sign_in_button.setOnClickListener(this)
+        anonymous_sign_in_button.setOnClickListener(this)
+
+        startSignIn();
+
     }
 
-    private fun setUpRecyclerView() {
-        val options = FirestoreRecyclerOptions.Builder<Song>()
-            .setQuery(songsCollectionRef, Song::class.java)
+    private fun startSignIn() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
             .build()
 
-        adapter = SongAdapter(options)
-
-        recycler_view.layoutManager = LinearLayoutManager(this)
-        recycler_view.setHasFixedSize(true)
-        recycler_view.adapter = adapter
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+        auth = Firebase.auth
     }
 
     override fun onStart() {
         super.onStart()
-        adapter.startListening()
+        // Check if user is signed in (non-null) and update UI accordingly.
+        val currentUser = auth.currentUser
+        if(currentUser != null) {
+            updateUI(currentUser)
+        }
+
     }
 
-    override fun onStop() {
-        super.onStop()
-        adapter.stopListening()
-    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-    /*
-            fun removeItem(view: View) {
-                val index = Random.nextInt(8)
-
-                exampleList.removeAt(index)
-                adapter.notifyItemRemoved(index)
-            }*/
-/*
-    override fun onItemClick(position: Int) {
-        Toast.makeText(this, "Item $position clicked", Toast.LENGTH_SHORT).show()
-        val clickedItem = exampleList[position]
-        clickedItem.title = "Clicked"
-        adapter.notifyItemChanged(position)
-    }
-*/
-/*
-    private fun subscribeToRealtimeUpdates() {
-        songsCollectionRef.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-            firebaseFirestoreException?.let {
-                Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
-                return@addSnapshotListener
-            }
-            querySnapshot?.let {
-                val songTempList = ArrayList<Song>()
-                for (document in it) {
-                    Log.d(TAG, "Receive song: ${document.id} ${document.data}")
-                    val song = document.toObject<Song>()
-                    songTempList.add(song)
-                    song.imageResource = R.drawable.ic_launcher_foreground
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            var userToken: String? = null
+            try {
+                val account: GoogleSignInAccount? = task.getResult(ApiException::class.java)!!
+                if (account != null) {
+               //     userToken = account.idToken
+                    Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
+                    firebaseAuthWithGoogle(account.idToken!!)
                 }
-                songList = songTempList
+
+            } catch (e: ApiException) {
+                Log.w(TAG, "Google sign in failed", e)
             }
         }
     }
 
-    private fun retrieveSongs() = CoroutineScope(Dispatchers.IO).launch {
-        try {
-            val querySnapshot = songsCollectionRef.get().await()
-            val songTempList = ArrayList<Song>()
-            for (document in querySnapshot.documents) {
-                Log.d(TAG, "Receive song: ${document.id} ${document.data}")
-                val song = document.toObject<Song>()
-                if (song != null) {
-                    songTempList.add(song)
-                    song.imageResource = R.drawable.ic_launcher_foreground
-                }
+    private fun signInByGoogle() {
+        Log.w(TAG, "CLICKED BUTTON")
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
+    override fun onClick(v: View?) {
+        if (v != null) {
+            when (v) {
+                v.google_sign_in_button -> signInByGoogle()
+                v.anonymous_sign_in_button -> signInAnonymously()
             }
-            withContext(Dispatchers.Main) {
-                songList = songTempList
-            }
-        } catch (exception: Exception) {
-            Log.w(TAG, "Error getting song documents.", exception)
         }
     }
 
-*/
-/*
-    private fun getSongList(): ArrayList<Song> {
-        val songList = ArrayList<Song>()
-        val query = songsCollectionRef.get()
 
-        query
-            .addOnCompleteListener { task ->
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    for (document in task.result!!) {
-                        Log.d(TAG, "Receive song: ${document.id} ${document.data}")
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "signInWithCredential:success")
+                    val user = auth.currentUser
+                    updateUI(user)
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "signInWithCredential:failure", task.exception)
+                    // ...
+                  //  Snackbar.make(view, "Authentication Failed.", Snackbar.LENGTH_SHORT).show()
+                    updateUI(null)
+                }
 
-                        val song = document.toObject<Song>()
-                        song.imageResource = R.drawable.ic_launcher_foreground
-                        songList += song
-                    }
+                // ...
+            }
+    }
+
+    private fun signInAnonymously() {
+        // [START signin_anonymously]
+        auth.signInAnonymously()
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "signInAnonymously:success")
+                    val user = auth.currentUser
+                    updateUI(user)
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "signInAnonymously:failure", task.exception)
+                    Toast.makeText(baseContext, "Authentication failed.",
+                        Toast.LENGTH_SHORT).show()
+                    updateUI(null)
                 }
             }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting song documents.", exception)
-            }
-
-        return songList
-    }*/
-    /* val list = ArrayList<Song>()
-
-     for (i in 0 until size) {
-         val drawable = when (i % 3) {
-             0 -> R.drawable.ic_launcher_foreground
-             1 -> R.drawable.ic_launcher_background
-             else -> R.drawable.abc_ic_ab_back_material
-         }
-
-         val item = Song(drawable, "Item $i", "Line 2")
-         list += item
-     }        return list
     }
-*/
 
-
+    private fun updateUI(user: FirebaseUser?) {
+        if (user != null) {
+            val intent = Intent(this, SonglistActivity::class.java)
+            startActivity(intent)
+        } else {
+            Toast.makeText(this,"Authentication failed",Toast.LENGTH_LONG).show()
+        }
+    }
 }
 

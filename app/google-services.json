@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "460478804729-c0a6tmkevi6nbn436eajg39i19mju5fc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "aochab.songbook",
+            "certificate_hash": "f1cecc307742b14d67006939b2ab5c95c16df89c"
+          }
+        },
+        {
           "client_id": "460478804729-n5aafqbgvhd8qc73skf0hd7e816hsnef.apps.googleusercontent.com",
           "client_type": 3
         }
