@@ -1,22 +1,27 @@
 package aochab.songbook
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_songlist.*
 
 
 class SonglistActivity : AppCompatActivity() {
 
     companion object {
-        val TAG = "MainActivity"
+        val TAG = "SonglistActivity"
     }
 
     private val songsCollectionRef = Firebase.firestore.collection("songs")
+    private val userSongsCollectionRef = Firebase.firestore.collection("users").document(Firebase.auth.currentUser!!.uid).collection("song")
     private lateinit var adapter: SongAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,11 +32,20 @@ class SonglistActivity : AppCompatActivity() {
     }
 
     private fun setUpRecyclerView() {
-        val options = FirestoreRecyclerOptions.Builder<Song>()
+        val optionsSongs = FirestoreRecyclerOptions.Builder<Song>()
             .setQuery(songsCollectionRef, Song::class.java)
             .build()
+      /*  val optionsUserSongs = FirestoreRecyclerOptions.Builder<Song>()
+            .setQuery(userSongsCollectionRef, Song::class.java)
+            .build()
 
-        adapter = SongAdapter(options)
+        val concatAdapter = ConcatAdapter(
+            SongAdapter(optionsSongs),
+            SongAdapter(optionsUserSongs)
+        )
+
+        adapter = concatAdapter as SongAdapter*/
+        adapter = SongAdapter(optionsSongs)
 
         recycler_view.layoutManager = LinearLayoutManager(this)
         recycler_view.setHasFixedSize(true)
@@ -46,6 +60,24 @@ class SonglistActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         adapter.stopListening()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_nav, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item?.itemId) {
+            R.id.menu_sign_out -> {
+                Firebase.auth.signOut()
+
+                val intent = Intent(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     /*

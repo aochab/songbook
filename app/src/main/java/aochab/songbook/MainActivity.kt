@@ -1,8 +1,11 @@
 package aochab.songbook
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +18,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
@@ -55,10 +60,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
-        if(currentUser != null) {
+        if (currentUser != null) {
             updateUI(currentUser)
+        } else {
+            googleSignInClient.signOut()
         }
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -71,7 +77,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             try {
                 val account: GoogleSignInAccount? = task.getResult(ApiException::class.java)!!
                 if (account != null) {
-               //     userToken = account.idToken
+                    //     userToken = account.idToken
                     Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
                     firebaseAuthWithGoogle(account.idToken!!)
                 }
@@ -106,12 +112,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
                     val user = auth.currentUser
+                    saveUserToFirebaseDatabase()
                     updateUI(user)
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                     // ...
-                  //  Snackbar.make(view, "Authentication Failed.", Snackbar.LENGTH_SHORT).show()
+                    //  Snackbar.make(view, "Authentication Failed.", Snackbar.LENGTH_SHORT).show()
                     updateUI(null)
                 }
 
@@ -127,12 +134,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInAnonymously:success")
                     val user = auth.currentUser
+                    saveUserToFirebaseDatabase()
                     updateUI(user)
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInAnonymously:failure", task.exception)
-                    Toast.makeText(baseContext, "Authentication failed.",
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        baseContext, "Authentication failed.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     updateUI(null)
                 }
             }
@@ -141,10 +151,29 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
             val intent = Intent(this, SonglistActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         } else {
-            Toast.makeText(this,"Authentication failed",Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Authentication failed", Toast.LENGTH_LONG).show()
         }
     }
+
+    private fun saveUserToFirebaseDatabase() {
+        val uid = auth.currentUser!!.uid
+        val email = auth.currentUser!!.email
+        val usersCollectionRef = Firebase.firestore.collection("users").document(uid)
+        //val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
+
+        val user = User(uid, email!!)
+        usersCollectionRef.set(user)
+            .addOnSuccessListener {
+                Log.d(TAG, "User added to firebase cloud")
+            }
+
+        val song = Song(0,"nowa")
+        val songRef = Firebase.firestore.collection("users").document(uid).collection("song").document(song.title)
+        songRef.set(song)
+    }
+
 }
 
