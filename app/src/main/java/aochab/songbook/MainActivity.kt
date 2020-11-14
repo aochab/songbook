@@ -153,6 +153,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             val intent = Intent(this, SonglistActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
+
+            finish()
         } else {
             Toast.makeText(this, "Authentication failed", Toast.LENGTH_LONG).show()
         }
@@ -160,9 +162,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun saveUserToFirebaseDatabase() {
         val uid = auth.currentUser!!.uid
-        val email = auth.currentUser!!.email
+        val email = auth.currentUser?.email ?: ""
         val usersCollectionRef = Firebase.firestore.collection("users").document(uid)
-        //val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
 
         val user = User(uid, email!!)
         usersCollectionRef.set(user)

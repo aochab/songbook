@@ -2,64 +2,140 @@ package aochab.songbook
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.ConcatAdapter
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_songlist.*
+import java.io.Serializable
 
 
-class SonglistActivity : AppCompatActivity() {
+class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener {
 
     companion object {
         val TAG = "SonglistActivity"
     }
 
-    private val songsCollectionRef = Firebase.firestore.collection("songs")
-    private val userSongsCollectionRef = Firebase.firestore.collection("users").document(Firebase.auth.currentUser!!.uid).collection("song")
     private lateinit var adapter: SongAdapter
+    private var firestoreDB = Firebase.firestore
+    private var firestoreListener: ListenerRegistration? = null
+    private var songsList = mutableListOf<Song>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_songlist)
 
-        setUpRecyclerView();
-    }
-
-    private fun setUpRecyclerView() {
-        val optionsSongs = FirestoreRecyclerOptions.Builder<Song>()
-            .setQuery(songsCollectionRef, Song::class.java)
-            .build()
-      /*  val optionsUserSongs = FirestoreRecyclerOptions.Builder<Song>()
-            .setQuery(userSongsCollectionRef, Song::class.java)
-            .build()
-
-        val concatAdapter = ConcatAdapter(
-            SongAdapter(optionsSongs),
-            SongAdapter(optionsUserSongs)
-        )
-
-        adapter = concatAdapter as SongAdapter*/
-        adapter = SongAdapter(optionsSongs)
-
         recycler_view.layoutManager = LinearLayoutManager(this)
         recycler_view.setHasFixedSize(true)
-        recycler_view.adapter = adapter
+
+        loadSongsList()
+
+        firestoreListener = firestoreDB!!.collection("songs")
+            .addSnapshotListener { documentSnapshots, exception ->
+                if (exception != null) {
+                    Log.e(TAG, "Listen failed!", exception);
+                    return@addSnapshotListener
+                }
+
+                for (doc in documentSnapshots!!) {
+                    val song = doc.toObject(Song::class.java)
+                    if (!songsList.contains(song)) {
+                        songsList.add(song)
+                    }
+                }
+                songsList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER, {it.title}))
+                adapter = SongAdapter(songsList, this)
+
+                recycler_view.adapter = adapter
+            }
+
+        firestoreDB!!.collection("users").document(Firebase.auth.currentUser!!.uid)
+            .collection("song")
+            .addSnapshotListener { documentSnapshots, exception ->
+                if (exception != null) {
+                    Log.e(TAG, "Listen failed!", exception);
+                    return@addSnapshotListener
+                }
+
+                for (doc in documentSnapshots!!) {
+                    val song = doc.toObject(Song::class.java)
+                    if (!songsList.contains(song)) {
+                        songsList.add(song)
+                    }
+                }
+
+                songsList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER, {it.title}))
+                adapter = SongAdapter(songsList, this)
+
+                recycler_view.adapter = adapter
+            }
+
     }
 
-    override fun onStart() {
-        super.onStart()
-        adapter.startListening()
+    override fun onDestroy() {
+        super.onDestroy()
+        firestoreListener!!.remove()
     }
 
-    override fun onStop() {
-        super.onStop()
-        adapter.stopListening()
+    private fun loadSongsList() {
+        val songsList = ArrayList<Song>()
+        firestoreDB!!.collection("songs")
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    //  val songsList = ArrayList<Song>()
+                    for (doc in task.result!!) {
+                        val song = doc.toObject(Song::class.java)
+                        if (!songsList.contains(song)) {
+                            songsList.add(song)
+                        }
+                    }
+                    songsList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER, {it.title}))
+                    adapter = SongAdapter(songsList, this)
+                    recycler_view!!.itemAnimator = DefaultItemAnimator()
+                    recycler_view!!.adapter = adapter
+                } else {
+                    Log.d(
+                        MainActivity.TAG,
+                        "Error getting documents: ",
+                        task.exception
+                    )
+                }
+            }
+
+        firestoreDB!!.collection("users").document(Firebase.auth.currentUser!!.uid)
+            .collection("song")
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    //  val songsList = ArrayList<Song>()
+                    for (doc in task.result!!) {
+                        val song = doc.toObject(Song::class.java)
+                        if (!songsList.contains(song)) {
+                            songsList.add(song)
+                        }
+                    }
+                    songsList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER, {it.title}))
+                    adapter = SongAdapter(songsList, this)
+
+                    recycler_view!!.itemAnimator = DefaultItemAnimator()
+                    recycler_view!!.adapter = adapter
+                } else {
+                    Log.d(
+                        MainActivity.TAG,
+                        "Error getting documents: ",
+                        task.exception
+                    )
+                }
+            }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -80,6 +156,17 @@ class SonglistActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onItemClick(position: Int) {
+        val intent = Intent(this, SongDetailActivity::class.java)
+        val bundle = Bundle()
+        for ( song in songsList) {
+            Log.d(TAG,"$position ${song.title}")
+        }
+        bundle.putParcelable("song", songsList[position])
+        intent.putExtra("Bundle", bundle)
+        startActivity(intent)
+    }
+
     /*
             fun removeItem(view: View) {
                 val index = Random.nextInt(8)
@@ -94,47 +181,6 @@ class SonglistActivity : AppCompatActivity() {
         clickedItem.title = "Clicked"
         adapter.notifyItemChanged(position)
     }
-*/
-/*
-    private fun subscribeToRealtimeUpdates() {
-        songsCollectionRef.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-            firebaseFirestoreException?.let {
-                Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
-                return@addSnapshotListener
-            }
-            querySnapshot?.let {
-                val songTempList = ArrayList<Song>()
-                for (document in it) {
-                    Log.d(TAG, "Receive song: ${document.id} ${document.data}")
-                    val song = document.toObject<Song>()
-                    songTempList.add(song)
-                    song.imageResource = R.drawable.ic_launcher_foreground
-                }
-                songList = songTempList
-            }
-        }
-    }
-
-    private fun retrieveSongs() = CoroutineScope(Dispatchers.IO).launch {
-        try {
-            val querySnapshot = songsCollectionRef.get().await()
-            val songTempList = ArrayList<Song>()
-            for (document in querySnapshot.documents) {
-                Log.d(TAG, "Receive song: ${document.id} ${document.data}")
-                val song = document.toObject<Song>()
-                if (song != null) {
-                    songTempList.add(song)
-                    song.imageResource = R.drawable.ic_launcher_foreground
-                }
-            }
-            withContext(Dispatchers.Main) {
-                songList = songTempList
-            }
-        } catch (exception: Exception) {
-            Log.w(TAG, "Error getting song documents.", exception)
-        }
-    }
-
 */
 /*
     private fun getSongList(): ArrayList<Song> {
@@ -159,21 +205,5 @@ class SonglistActivity : AppCompatActivity() {
 
         return songList
     }*/
-    /* val list = ArrayList<Song>()
-
-     for (i in 0 until size) {
-         val drawable = when (i % 3) {
-             0 -> R.drawable.ic_launcher_foreground
-             1 -> R.drawable.ic_launcher_background
-             else -> R.drawable.abc_ic_ab_back_material
-         }
-
-         val item = Song(drawable, "Item $i", "Line 2")
-         list += item
-     }        return list
-    }
-*/
-
-
 }
 
