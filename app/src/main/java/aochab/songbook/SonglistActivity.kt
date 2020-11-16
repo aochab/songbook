@@ -91,9 +91,9 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener {
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    //  val songsList = ArrayList<Song>()
                     for (doc in task.result!!) {
                         val song = doc.toObject(Song::class.java)
+                        // TODO sprawdzanie czy piosenka  dodana po treści
                         if (!songsList.contains(song)) {
                             songsList.add(song)
                         }
@@ -116,7 +116,6 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener {
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    //  val songsList = ArrayList<Song>()
                     for (doc in task.result!!) {
                         val song = doc.toObject(Song::class.java)
                         if (!songsList.contains(song)) {
@@ -159,51 +158,12 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener {
     override fun onItemClick(position: Int) {
         val intent = Intent(this, SongDetailActivity::class.java)
         val bundle = Bundle()
-        for ( song in songsList) {
-            Log.d(TAG,"$position ${song.title}")
+        for (song in songsList) {
+            Log.d(TAG, "$position ${song.title}")
         }
         bundle.putParcelable("song", songsList[position])
         intent.putExtra("Bundle", bundle)
         startActivity(intent)
     }
-
-    /*
-            fun removeItem(view: View) {
-                val index = Random.nextInt(8)
-
-                exampleList.removeAt(index)
-                adapter.notifyItemRemoved(index)
-            }*/
-/*
-    override fun onItemClick(position: Int) {
-        Toast.makeText(this, "Item $position clicked", Toast.LENGTH_SHORT).show()
-        val clickedItem = exampleList[position]
-        clickedItem.title = "Clicked"
-        adapter.notifyItemChanged(position)
-    }
-*/
-/*
-    private fun getSongList(): ArrayList<Song> {
-        val songList = ArrayList<Song>()
-        val query = songsCollectionRef.get()
-
-        query
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    for (document in task.result!!) {
-                        Log.d(TAG, "Receive song: ${document.id} ${document.data}")
-
-                        val song = document.toObject<Song>()
-                        song.imageResource = R.drawable.ic_launcher_foreground
-                        songList += song
-                    }
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting song documents.", exception)
-            }
-
-        return songList
-    }*/
 }
 

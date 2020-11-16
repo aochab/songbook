@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="0dp">
+
+    <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3" />
+
+    <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="0.4">
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Transponuj akordy"
+                    android:textColor="@color/text_color"
+                    android:background="@color/colorPrimary"/>
+
+            <ScrollView
+                    android:id="@+id/transpose_chords_scroll_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                    <Button
+                            android:id="@+id/transpose_minus_6_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="-6" />
+
+                    <Button
+                            android:id="@+id/transpose_minus_5_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="-5" />
+
+                    <Button
+                            android:id="@+id/transpose_minus_4_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="-4" />
+
+                    <Button
+                            android:id="@+id/transpose_minus_3_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="-3" />
+
+                    <Button
+                            android:id="@+id/transpose_minus_2_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="-2" />
+
+                    <Button
+                            android:id="@+id/transpose_minus_1_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="-1" />
+
+                    <Button
+                            android:id="@+id/transpose_0_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="0" />
+
+                    <Button
+                            android:id="@+id/transpose_plus_1_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="+1" />
+
+                    <Button
+                            android:id="@+id/transpose_plus_2_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="+2" />
+
+                    <Button
+                            android:id="@+id/transpose_plus_3_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="+3" />
+
+                    <Button
+                            android:id="@+id/transpose_plus_4_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="+4" />
+
+                    <Button
+                            android:id="@+id/transpose_plus_5_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="+5" />
+
+                    <Button
+                            android:id="@+id/transpose_plus_6_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="+6" />
+                </LinearLayout>
+
+
+            </ScrollView>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+    <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3" />
+</LinearLayout>
