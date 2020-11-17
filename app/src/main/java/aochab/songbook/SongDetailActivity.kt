@@ -30,6 +30,9 @@ import kotlin.math.sqrt
 
 class SongDetailActivity : AppCompatActivity() {
 
+    lateinit var originalChords: String
+    lateinit var originalLyric: String
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,43 +44,12 @@ class SongDetailActivity : AppCompatActivity() {
         val lyricView = song_lyrics
         val lyric = song.lyrics.replace("\\n", "\n")
         val chords = song.chords.replace("\\n", "\n")
+        originalChords = chords
+        originalLyric = lyric
 
-        val lyricByLines = lyric.lines()
-        val chordsByLines = chords.lines()
-        var lyricWithChords = SpannableStringBuilder()
+        val concatenateLyricAndChords = ConcatenateLyricAndChords()
+        val lyricWithChords = concatenateLyricAndChords.concatenate(lyric, chords)
 
-        for (i in lyricByLines.indices) {
-            val lyricLineWithFormat = SpannableString(lyricByLines[i])
-            lyricLineWithFormat.setSpan(
-                ForegroundColorSpan(Color.BLACK),
-                0,
-                lyricLineWithFormat.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-
-            val chordsLineWithFormat = SpannableString(chordsByLines[i])
-            chordsLineWithFormat.setSpan(
-                ForegroundColorSpan(Color.RED),
-                0,
-                chordsLineWithFormat.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            chordsLineWithFormat.setSpan(
-                StyleSpan(Typeface.BOLD),
-                0,
-                chordsLineWithFormat.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            lyricWithChords.append(
-                TextUtils.concat(
-                    lyricLineWithFormat,
-                    "  ",
-                    chordsLineWithFormat,
-                    "\n"
-                )
-            )
-
-        }
         lyricView.text = lyricWithChords
 
         lyricView.setOnTouchListener(PinchZoomOnTouchTextViewListener(lyricView))
@@ -91,7 +63,7 @@ class SongDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
             R.id.menu_transposition -> {
-                val transposeChordsPopUp = TransposeChordsPopUp()
+                val transposeChordsPopUp = TransposeChordsPopUp(originalLyric, originalChords)
                 transposeChordsPopUp.showPopUp(this.window.decorView)
             }
         }
