@@ -83,8 +83,18 @@ class TransposeChordsPopUp(private val lyric: String, private val chords: String
         popupView: View,
         transposeChordsPopUp: PopupWindow
     ) {
+        val button0 = popupView.transpose_0_button
+        button0.setOnClickListener {
+            Log.d("TransposeChordsPopUp", "Button 0 original transposition chords clicked")
+            val transposedChords = transposeChords(0, chords)
+            val concatenateLyricAndChords = ConcatenateLyricAndChords()
+            val lyricWithChords = concatenateLyricAndChords.concatenate(lyric, transposedChords)
+            activityView.song_lyrics.text = lyricWithChords
+            transposeChordsPopUp.dismiss()
+        }
+
         val buttonPlus1 = popupView.transpose_plus_1_button
-        buttonPlus1.setOnClickListener { v ->
+        buttonPlus1.setOnClickListener {
             Log.d("TransposeChordsPopUp", "Button +1 transpose chords clicked")
             val transposedChords = transposeChords(1, chords)
             val concatenateLyricAndChords = ConcatenateLyricAndChords()
@@ -94,7 +104,7 @@ class TransposeChordsPopUp(private val lyric: String, private val chords: String
         }
 
         val buttonPlus2 = popupView.transpose_plus_2_button
-        buttonPlus2.setOnClickListener { v ->
+        buttonPlus2.setOnClickListener {
             Log.d("TransposeChordsPopUp", "Button +2 transpose chords clicked")
             val transposedChords = transposeChords(2, chords)
             val concatenateLyricAndChords = ConcatenateLyricAndChords()
@@ -104,9 +114,99 @@ class TransposeChordsPopUp(private val lyric: String, private val chords: String
         }
 
         val buttonPlus3 = popupView.transpose_plus_3_button
-        buttonPlus3.setOnClickListener { v ->
+        buttonPlus3.setOnClickListener {
             Log.d("TransposeChordsPopUp", "Button +3 transpose chords clicked")
             val transposedChords = transposeChords(3, chords)
+            val concatenateLyricAndChords = ConcatenateLyricAndChords()
+            val lyricWithChords = concatenateLyricAndChords.concatenate(lyric, transposedChords)
+            activityView.song_lyrics.text = lyricWithChords
+            transposeChordsPopUp.dismiss()
+        }
+
+        val buttonPlus4 = popupView.transpose_plus_4_button
+        buttonPlus4.setOnClickListener {
+            Log.d("TransposeChordsPopUp", "Button +4 transpose chords clicked")
+            val transposedChords = transposeChords(4, chords)
+            val concatenateLyricAndChords = ConcatenateLyricAndChords()
+            val lyricWithChords = concatenateLyricAndChords.concatenate(lyric, transposedChords)
+            activityView.song_lyrics.text = lyricWithChords
+            transposeChordsPopUp.dismiss()
+        }
+
+        val buttonPlus5 = popupView.transpose_plus_5_button
+        buttonPlus5.setOnClickListener {
+            Log.d("TransposeChordsPopUp", "Button +5 transpose chords clicked")
+            val transposedChords = transposeChords(5, chords)
+            val concatenateLyricAndChords = ConcatenateLyricAndChords()
+            val lyricWithChords = concatenateLyricAndChords.concatenate(lyric, transposedChords)
+            activityView.song_lyrics.text = lyricWithChords
+            transposeChordsPopUp.dismiss()
+        }
+
+        val buttonPlus6 = popupView.transpose_plus_6_button
+        buttonPlus6.setOnClickListener {
+            Log.d("TransposeChordsPopUp", "Button +6 transpose chords clicked")
+            val transposedChords = transposeChords(6, chords)
+            val concatenateLyricAndChords = ConcatenateLyricAndChords()
+            val lyricWithChords = concatenateLyricAndChords.concatenate(lyric, transposedChords)
+            activityView.song_lyrics.text = lyricWithChords
+            transposeChordsPopUp.dismiss()
+        }
+
+        val buttonMinus1 = popupView.transpose_minus_1_button
+        buttonMinus1.setOnClickListener {
+            Log.d("TransposeChordsPopUp", "Button -1 transpose chords clicked")
+            val transposedChords = transposeChords(-1, chords)
+            val concatenateLyricAndChords = ConcatenateLyricAndChords()
+            val lyricWithChords = concatenateLyricAndChords.concatenate(lyric, transposedChords)
+            activityView.song_lyrics.text = lyricWithChords
+            transposeChordsPopUp.dismiss()
+        }
+
+        val buttonMinus2 = popupView.transpose_minus_2_button
+        buttonMinus2.setOnClickListener {
+            Log.d("TransposeChordsPopUp", "Button -1 transpose chords clicked")
+            val transposedChords = transposeChords(-2, chords)
+            val concatenateLyricAndChords = ConcatenateLyricAndChords()
+            val lyricWithChords = concatenateLyricAndChords.concatenate(lyric, transposedChords)
+            activityView.song_lyrics.text = lyricWithChords
+            transposeChordsPopUp.dismiss()
+        }
+
+        val buttonMinus3 = popupView.transpose_minus_3_button
+        buttonMinus3.setOnClickListener {
+            Log.d("TransposeChordsPopUp", "Button -3 transpose chords clicked")
+            val transposedChords = transposeChords(-3, chords)
+            val concatenateLyricAndChords = ConcatenateLyricAndChords()
+            val lyricWithChords = concatenateLyricAndChords.concatenate(lyric, transposedChords)
+            activityView.song_lyrics.text = lyricWithChords
+            transposeChordsPopUp.dismiss()
+        }
+
+        val buttonMinus4 = popupView.transpose_minus_4_button
+        buttonMinus4.setOnClickListener {
+            Log.d("TransposeChordsPopUp", "Button -4 transpose chords clicked")
+            val transposedChords = transposeChords(-4, chords)
+            val concatenateLyricAndChords = ConcatenateLyricAndChords()
+            val lyricWithChords = concatenateLyricAndChords.concatenate(lyric, transposedChords)
+            activityView.song_lyrics.text = lyricWithChords
+            transposeChordsPopUp.dismiss()
+        }
+
+        val buttonMinus5 = popupView.transpose_minus_5_button
+        buttonMinus5.setOnClickListener {
+            Log.d("TransposeChordsPopUp", "Button -5 transpose chords clicked")
+            val transposedChords = transposeChords(-5, chords)
+            val concatenateLyricAndChords = ConcatenateLyricAndChords()
+            val lyricWithChords = concatenateLyricAndChords.concatenate(lyric, transposedChords)
+            activityView.song_lyrics.text = lyricWithChords
+            transposeChordsPopUp.dismiss()
+        }
+
+        val buttonMinus6 = popupView.transpose_minus_6_button
+        buttonMinus6.setOnClickListener {
+            Log.d("TransposeChordsPopUp", "Button -6 transpose chords clicked")
+            val transposedChords = transposeChords(-6, chords)
             val concatenateLyricAndChords = ConcatenateLyricAndChords()
             val lyricWithChords = concatenateLyricAndChords.concatenate(lyric, transposedChords)
             activityView.song_lyrics.text = lyricWithChords
@@ -128,32 +228,12 @@ class TransposeChordsPopUp(private val lyric: String, private val chords: String
                     }
                 }
                 val chord = chordsToTranspose.substring(i, i + chordLength)
-                Log.d("TAG", chord)
                 i += chordLength
-                if (chord.first().isLowerCase()) {
-                    for (j in listOfMinorChordsToTranspose.indices) {
-                        if (chord == listOfMinorChordsToTranspose[j]) {
-                            transposedChords += if ((j + numOfSemitones) <= listOfMinorChordsToTranspose.lastIndex) {
-                                listOfMinorChordsToTranspose[j + numOfSemitones]
-                            } else {
-                                val correctIndexAfterTranspose =
-                                    (j + numOfSemitones) - listOfMinorChordsToTranspose.size
-                                listOfMinorChordsToTranspose[correctIndexAfterTranspose]
-                            }
-                        }
-                    }
+
+                transposedChords += if (chord.first().isLowerCase()) {
+                    getNewChord(listOfMinorChordsToTranspose, chord, numOfSemitones)
                 } else {
-                    for (j in listOfMajorChordsToTranspose.indices) {
-                        if (chord == listOfMajorChordsToTranspose[j]) {
-                            transposedChords += if ((j + numOfSemitones) <= listOfMajorChordsToTranspose.lastIndex) {
-                                listOfMajorChordsToTranspose[j + numOfSemitones]
-                            } else {
-                                val correctIndexAfterTranspose =
-                                    (j + numOfSemitones) - listOfMajorChordsToTranspose.size
-                                listOfMajorChordsToTranspose[correctIndexAfterTranspose]
-                            }
-                        }
-                    }
+                    getNewChord(listOfMajorChordsToTranspose, chord, numOfSemitones)
                 }
             } else {
                 transposedChords += chordsToTranspose[i]
@@ -162,145 +242,34 @@ class TransposeChordsPopUp(private val lyric: String, private val chords: String
         }
         return transposedChords
     }
-}
-/*
-        for (i in 0 until chordsToTranspose.length) {
-            var chord = chordsToTranspose[i].toString()
-            val temp = 0
-            while ((temp < chordsToTranspose.length) and !chord.isBlank()) {
-                i += 1
-            }
 
-            if ((i + 1) < chordsToTranspose.lastIndex) { // TODO poprawić ten kod, zeby odczytywa inne C9 itd.
-                if (chordsToTranspose[i + 1] == 'i') {
-                    chord += "is"
-                }
-            }
-
-
-            if (chord.first().isLetter()) {
-                if (chord.first().isLowerCase()) {
-                    for (j in listOfMinorChordsToTranspose.indices) {
-                        if (chord == listOfMinorChordsToTranspose[j]) {
-                            if (j == listOfMinorChordsToTranspose.lastIndex) {
-                                transposedChords += listOfMinorChordsToTranspose[0]
-                            }
-                            transposedChords += listOfMinorChordsToTranspose[j + numOfSemitones]
-                        }
+    private fun getNewChord(
+        listOfChordsToTransport: List<String>,
+        chord: String,
+        numOfSemitones: Int
+    ): String {
+        var transposedChord = ""
+        for (j in listOfChordsToTransport.indices) {
+            if (chord == listOfChordsToTransport[j]) {
+                transposedChord += when {
+                    ((j + numOfSemitones) > listOfChordsToTransport.lastIndex) -> {
+                        val correctIndexAfterTranspose =
+                            (j + numOfSemitones) - listOfChordsToTransport.size
+                        listOfChordsToTransport[correctIndexAfterTranspose]
                     }
-                } else {
-                    for (j in listOfMajorChordsToTranspose.indices) {
-                        if (chord == listOfMajorChordsToTranspose[j]) {
-                            if (j == listOfMajorChordsToTranspose.lastIndex) {
-                                transposedChords += listOfMajorChordsToTranspose[0]
-                            }
-                            transposedChords += listOfMajorChordsToTranspose[j + numOfSemitones]
-                        }
+                    (j + numOfSemitones) < 0 -> {
+                        val correctIndexAfterTranspose =
+                            (j + numOfSemitones) + listOfChordsToTransport.size
+                        listOfChordsToTransport[correctIndexAfterTranspose]
                     }
-                }
-            } else {
-                transposedChords += chordsToTranspose[i]
-            }
-        }
-        return transposedChords
-    }
-
-    var chordsByLines = chordsToTranspose.lines()
-    for (line in chordsByLines) {
-        val splittedChords = line.split(' ')
-        for (chord in splittedChords) {
-            Log.d("TAG", "Tu: $chord")
-            if (chord.isEmpty()) {
-                transposedChords += "\n"
-                continue
-            }
-            if (chord.first().isLowerCase()) {
-                for (j in listOfMinorChordsToTranspose.indices) {
-                    if (chord == listOfMinorChordsToTranspose[j]) {
-                        if (j == listOfMinorChordsToTranspose.lastIndex) {
-                            transposedChords += listOfMinorChordsToTranspose[0] + " "
-                        }
-                        transposedChords += listOfMinorChordsToTranspose[j + numOfSemitones] + " "
-                    }
-                }
-            } else {
-                for (j in listOfMajorChordsToTranspose.indices) {
-                    if (chord == listOfMajorChordsToTranspose[j]) {
-                        if (j == listOfMajorChordsToTranspose.lastIndex) {
-                            transposedChords += listOfMajorChordsToTranspose[0] + " "
-                        }
-                        transposedChords += listOfMajorChordsToTranspose[j + numOfSemitones] + " "
+                    else -> {
+                        listOfChordsToTransport[j + numOfSemitones]
                     }
                 }
             }
         }
+        return transposedChord
     }
-    return transposedChords
 }
-
-      for (chord in splittedChords) {
-          if (chord != "\n") {
-              if (chord.first().isLowerCase()) {
-                  for (j in listOfMinorChordsToTranspose.indices) {
-                      if (chord == listOfMinorChordsToTranspose[j]) {
-                          if (j == listOfMinorChordsToTranspose.lastIndex) {
-                              transposedChords += listOfMinorChordsToTranspose[0]
-                          }
-                          transposedChords += listOfMinorChordsToTranspose[j + numOfSemitones]
-                      }
-                  }
-              } else {
-                  for (j in listOfMajorChordsToTranspose.indices) {
-                      if (chord == listOfMajorChordsToTranspose[j]) {
-                          if (j == listOfMajorChordsToTranspose.lastIndex) {
-                              transposedChords += listOfMajorChordsToTranspose[0]
-                          }
-                          transposedChords += listOfMajorChordsToTranspose[j + numOfSemitones]
-                      }
-                  }
-              }
-          } else {
-              transposedChords += "\n"
-          }
-      }
-        for (i in 0 until chordsToTranspose.length) {
-
-            if (!chordsToTranspose[i].isLetter()) {
-                transposedChords += chordsToTranspose[i]
-                continue
-            }
-
-            var originalChord = ""
-            var temp = 0
-            while(chordsToTranspose[i].isLetter()) {
-                originalChord += chordsToTranspose[i]
-                temp++
-            }
-            if (!chordsToTranspose[i].isLetter()) {
-                transposedChords += chordsToTranspose[i]
-                continue
-            }
-            val originalChord = chordsToTranspose[i]
-
-            if (originalChord.isLowerCase()) {
-                for (j in listOfMinorChordsToTranspose.indices) {
-                    if (originalChord.toString() == listOfMinorChordsToTranspose[j]) {
-                        if (j == listOfMinorChordsToTranspose.lastIndex) {
-                            transposedChords += listOfMinorChordsToTranspose[0]
-                        }
-                        transposedChords += listOfMinorChordsToTranspose[j + numOfSemitones]
-                    }
-                }
-            } else {
-                for (j in listOfMajorChordsToTranspose.indices) {
-                    if (originalChord.toString() == listOfMajorChordsToTranspose[j]) {
-                        if (j == listOfMajorChordsToTranspose.lastIndex) {
-                            transposedChords += listOfMajorChordsToTranspose[0]
-                        }
-                        transposedChords += listOfMajorChordsToTranspose[j + numOfSemitones]
-                    }
-                }
-            }
-        }*/
 
 
