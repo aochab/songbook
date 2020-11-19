@@ -109,7 +109,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
                     val user = auth.currentUser
                     saveUserToFirebaseDatabase()
@@ -117,27 +116,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
-                    // ...
-                    //  Snackbar.make(view, "Authentication Failed.", Snackbar.LENGTH_SHORT).show()
                     updateUI(null)
                 }
-
-                // ...
             }
     }
 
     private fun signInAnonymously() {
-        // [START signin_anonymously]
         auth.signInAnonymously()
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInAnonymously:success")
                     val user = auth.currentUser
                     saveUserToFirebaseDatabase()
                     updateUI(user)
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInAnonymously:failure", task.exception)
                     Toast.makeText(
                         baseContext, "Authentication failed.",

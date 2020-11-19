@@ -28,6 +28,8 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener {
     private var firestoreDB = Firebase.firestore
     private var firestoreListener: ListenerRegistration? = null
     private var songsList = mutableListOf<Song>()
+    private var publicSongList = mutableListOf<Song>()
+    private var userSongList = mutableListOf<Song>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,14 +46,16 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener {
                     Log.e(TAG, "Listen failed!", exception);
                     return@addSnapshotListener
                 }
+                songsList.clear()
+                publicSongList.clear()
 
                 for (doc in documentSnapshots!!) {
                     val song = doc.toObject(Song::class.java)
-                    if (!songsList.contains(song)) {
-                        songsList.add(song)
-                    }
+                    publicSongList.add(song)
                 }
-                songsList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER, {it.title}))
+                songsList.addAll(publicSongList)
+                songsList.addAll(userSongList)
+                songsList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.title }))
                 adapter = SongAdapter(songsList, this)
 
                 recycler_view.adapter = adapter
@@ -65,14 +69,15 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener {
                     return@addSnapshotListener
                 }
 
+                songsList.clear()
+                userSongList.clear()
                 for (doc in documentSnapshots!!) {
                     val song = doc.toObject(Song::class.java)
-                    if (!songsList.contains(song)) {
-                        songsList.add(song)
-                    }
+                    userSongList.add(song)
                 }
-
-                songsList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER, {it.title}))
+                songsList.addAll(publicSongList)
+                songsList.addAll(userSongList)
+                songsList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.title }))
                 adapter = SongAdapter(songsList, this)
 
                 recycler_view.adapter = adapter
@@ -90,15 +95,16 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener {
         firestoreDB!!.collection("songs")
             .get()
             .addOnCompleteListener { task ->
+                songsList.clear()
+                publicSongList.clear()
                 if (task.isSuccessful) {
                     for (doc in task.result!!) {
                         val song = doc.toObject(Song::class.java)
-                        // TODO sprawdzanie czy piosenka  dodana po treści
-                        if (!songsList.contains(song)) {
-                            songsList.add(song)
-                        }
+                        publicSongList.add(song)
                     }
-                    songsList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER, {it.title}))
+                    songsList.addAll(publicSongList)
+                    songsList.addAll(userSongList)
+                    songsList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.title }))
                     adapter = SongAdapter(songsList, this)
                     recycler_view!!.itemAnimator = DefaultItemAnimator()
                     recycler_view!!.adapter = adapter
@@ -115,14 +121,16 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener {
             .collection("song")
             .get()
             .addOnCompleteListener { task ->
+                songsList.clear()
+                userSongList.clear()
                 if (task.isSuccessful) {
                     for (doc in task.result!!) {
                         val song = doc.toObject(Song::class.java)
-                        if (!songsList.contains(song)) {
-                            songsList.add(song)
-                        }
+                        userSongList.add(song)
                     }
-                    songsList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER, {it.title}))
+                    songsList.addAll(userSongList)
+                    songsList.addAll(publicSongList)
+                    songsList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.title }))
                     adapter = SongAdapter(songsList, this)
 
                     recycler_view!!.itemAnimator = DefaultItemAnimator()
