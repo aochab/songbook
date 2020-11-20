@@ -1,5 +1,6 @@
 package aochab.songbook
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Typeface
 import android.text.Spannable
@@ -10,6 +11,7 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 
 class ConcatenateLyricAndChords {
+
     fun concatenate(lyric: String, chords: String) : SpannableStringBuilder {
         val lyricByLines = lyric.lines()
         val chordsByLines = chords.lines()
