@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="0dp">
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="Tytuł"
+            android:ems="10"
+            android:id="@+id/inputSongTitle" />
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="Wykonawca"
+            android:ems="10"
+            android:id="@+id/inputSongwriter" />
+
+    <TextView
+            android:text="Ilość linii tekstu i akordów musi być taka sama"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView" />
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="100"
+            android:padding="8dp">
+
+        <EditText
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="75"
+                android:inputType="textMultiLine"
+                android:gravity="top|left"
+                android:text="Tekst"
+                android:ems="10"
+                android:textSize="13sp"
+                android:id="@+id/inputSongLyrics" />
+
+        <EditText
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="25"
+                android:inputType="textMultiLine"
+                android:gravity="top|left"
+                android:text="Akordy"
+                android:ems="10"
+                android:textSize="13sp"
+                android:id="@+id/inputSongChords" />
+    </LinearLayout>
+
+    <Button
+            android:text="Zapisz piosenkę"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/button5" />
+</LinearLayout>
+

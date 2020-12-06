@@ -1,14 +1,15 @@
 package aochab.songbook
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
+import android.view.*
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.song_item.view.*
 
-class SongAdapter(private val songs: List<Song>, private val listener: OnItemClickListener) :
+class SongAdapter(
+    private val songs: List<Song>,
+    private val listener: OnItemClickListener,
+    private val listenerContextMenu: OnContextMenuListener
+) :
     RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
@@ -20,12 +21,13 @@ class SongAdapter(private val songs: List<Song>, private val listener: OnItemCli
     }
 
     inner class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
-        View.OnClickListener {
+        View.OnClickListener, View.OnCreateContextMenuListener {
         val songTitle: TextView = itemView.song_title
         val songwriter: TextView = itemView.songwriter
 
         init {
             itemView.setOnClickListener(this)
+            itemView.setOnCreateContextMenuListener(this)
         }
 
         override fun onClick(v: View?) {
@@ -34,10 +36,25 @@ class SongAdapter(private val songs: List<Song>, private val listener: OnItemCli
                 listener.onItemClick(position)
             }
         }
+
+        override fun onCreateContextMenu(
+            menu: ContextMenu?,
+            view: View?,
+            menuInfo: ContextMenu.ContextMenuInfo?
+        ) {
+            val position = absoluteAdapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                listenerContextMenu.onContextMenu(position, menu)
+            }
+        }
     }
 
     interface OnItemClickListener {
         fun onItemClick(position: Int)
+    }
+
+    interface OnContextMenuListener {
+        fun onContextMenu(position: Int, menu: ContextMenu?)
     }
 
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {

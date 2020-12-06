@@ -227,14 +227,19 @@ class TransposeChordsPopUp(private val lyric: String, private val chords: String
                         chordLength++
                     }
                 }
-                val chord = chordsToTranspose.substring(i, i + chordLength)
+                var chord = chordsToTranspose.substring(i, i + chordLength)
                 i += chordLength
+
+                val numInChord = chord.filter { it.isDigit() }
+                val regexToDeleteNumFromChord = Regex("[0-9]")
+                chord = regexToDeleteNumFromChord.replace(chord, "")
 
                 transposedChords += if (chord.first().isLowerCase()) {
                     getNewChord(listOfMinorChordsToTranspose, chord, numOfSemitones)
                 } else {
                     getNewChord(listOfMajorChordsToTranspose, chord, numOfSemitones)
                 }
+                transposedChords += numInChord
             } else {
                 transposedChords += chordsToTranspose[i]
                 i++

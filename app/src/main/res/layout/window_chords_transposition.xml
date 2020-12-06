@@ -31,7 +31,7 @@
                     android:padding="10dp"
                     android:text="Transponuj akordy"
                     android:textColor="@color/text_color"
-                    android:background="@color/colorPrimary"/>
+                    android:background="@color/colorPrimary" />
 
             <ScrollView
                     android:id="@+id/transpose_chords_scroll_view"

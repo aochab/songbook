@@ -6,6 +6,10 @@
         android:title="Wyloguj się"
         app:showAsAction="ifRoom" />
 
+    <item android:id="@+id/menu_add_song"
+            android:title="Dodaj piosnekę"
+            app:showAsAction="ifRoom" />
+
     <item android:id="@+id/menu_options"
             android:title="Opcje" />
 </menu>
