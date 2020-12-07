@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+            android:id="@+id/menu_add_song"
+            android:title="Dodaj piosenkę" />
+
+    <item
+            android:id="@+id/menu_user_songs"
+            android:title="Moje piosenki" />
+
+    <item
+            android:id="@+id/menu_public_songs"
+            android:title="Publiczne piosenki" />
+
+    <item
+            android:id="@+id/menu_sign_out"
+            android:title="Wyloguj się" />
+</menu>

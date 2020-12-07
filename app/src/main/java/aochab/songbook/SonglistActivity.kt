@@ -6,21 +6,22 @@ import android.util.Log
 import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_songlist.*
-import java.io.Serializable
 
 
 class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener,
-    SongAdapter.OnContextMenuListener {
+    SongAdapter.OnContextMenuListener, NavigationView.OnNavigationItemSelectedListener {
 
     companion object {
         val TAG = "SonglistActivity"
@@ -37,9 +38,12 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_songlist)
 
+        imageMenu.setOnClickListener {
+            drawer_layout.openDrawer(GravityCompat.START)
+        }
+        navigation_view.setNavigationItemSelectedListener(this)
         recycler_view.layoutManager = LinearLayoutManager(this)
         recycler_view.setHasFixedSize(true)
-
 
         loadSongsList()
 
@@ -148,29 +152,6 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener,
             }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_nav, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_sign_out -> {
-                Firebase.auth.signOut()
-
-                val intent = Intent(this, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-            }
-            R.id.menu_add_song -> {
-                val intent = Intent(this, AddSongActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     override fun onItemClick(position: Int) {
         val intent = Intent(this, SongDetailActivity::class.java)
         val bundle = Bundle()
@@ -204,7 +185,8 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener,
                             .document("${songToDelete.title} - ${songToDelete.songwriter}")
                             .delete()
                             .addOnSuccessListener {
-                                val toast = Toast.makeText(this, "Usunięto piosenkę", Toast.LENGTH_LONG)
+                                val toast =
+                                    Toast.makeText(this, "Usunięto piosenkę", Toast.LENGTH_LONG)
                                 toast.show()
                             }
                             .addOnFailureListener { e ->
@@ -228,5 +210,40 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener,
             }
             true
         }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_sign_out -> {
+                Firebase.auth.signOut()
+
+                val intent = Intent(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+            R.id.menu_add_song -> {
+                val intent = Intent(this, AddSongActivity::class.java)
+               // intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+            R.id.menu_public_songs -> {
+                val intent = Intent(this, SonglistActivity::class.java)
+              //  intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                //zrobic sprawdzenie czy to aktualny intent, jak tak to nie starujemy nowego
+
+            }
+        }
+        drawer_layout.closeDrawer(GravityCompat.START)
+        return true
+    }
+
+    override fun onBackPressed() {
+        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+            drawer_layout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
 }
 

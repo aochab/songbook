@@ -4,30 +4,39 @@
 
     <application
             android:allowBackup="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/ic_launcher_icon_note"
             android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:roundIcon="@mipmap/ic_launcher_icon_note_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".SongDetailActivity" />
-        <activity android:name=".MainActivity">
+        <activity
+                android:name=".SongDetailActivity"
+                android:launchMode="singleTask" />
+        <activity
+                android:name=".MainActivity"
+                android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SonglistActivity">
+        <activity
+                android:name=".SonglistActivity"
+                android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddSongActivity">
+        <activity
+                android:name=".AddSongActivity"
+                android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".EditSongActivity">
+        <activity
+                android:name=".EditSongActivity"
+                android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.DEFAULT" />
             </intent-filter>
