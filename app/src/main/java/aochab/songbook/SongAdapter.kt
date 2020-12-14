@@ -1,16 +1,19 @@
 package aochab.songbook
 
 import android.view.*
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.song_item.view.*
 
 class SongAdapter(
-    private val songs: List<Song>,
+    public val songs: MutableList<Song>,
     private val listener: OnItemClickListener,
     private val listenerContextMenu: OnContextMenuListener
 ) :
-    RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
+    RecyclerView.Adapter<SongAdapter.SongViewHolder>(), Filterable {
+    private var fullListOfSongs: List<Song> = ArrayList(songs)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(
@@ -65,4 +68,37 @@ class SongAdapter(
     }
 
     override fun getItemCount() = songs.size
+
+    override fun getFilter(): Filter {
+        return songFilter;
+    }
+
+    private val songFilter = object : Filter() {
+        override fun performFiltering(constraint: CharSequence?): FilterResults {
+            val filteredSongList = ArrayList<Song>()
+
+            if(constraint == null || constraint.isEmpty()) {
+                filteredSongList.addAll(fullListOfSongs)
+            } else {
+                val filterPattern = constraint.toString().toLowerCase().trim()
+
+                for (song in fullListOfSongs ) {
+                    if(song.title.toLowerCase().contains(filterPattern) or song.songwriter.toLowerCase().contains(filterPattern)) {
+                        filteredSongList.add(song)
+                    }
+                }
+            }
+
+            val filterResults = FilterResults()
+            filterResults.values = filteredSongList
+            return filterResults
+        }
+
+        override fun publishResults(constraint: CharSequence?, filterResults: FilterResults?) {
+            songs.clear()
+            songs.addAll(filterResults?.values as Collection<Song>)
+            notifyDataSetChanged()
+        }
+
+    }
 }

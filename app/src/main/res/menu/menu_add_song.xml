@@ -3,6 +3,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/menu_save_song"
-            android:title="Zapisz piosenkę"
+            android:icon="@drawable/ic_save_icon"
+            android:title="Save"
             app:showAsAction="ifRoom" />
 </menu>

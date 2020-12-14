@@ -8,8 +8,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
-import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
@@ -33,14 +33,18 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener,
     private var songsList = mutableListOf<Song>()
     private var publicSongList = mutableListOf<Song>()
     private var userSongList = mutableListOf<Song>()
+    private lateinit var searchView: SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_songlist)
 
+        setSupportActionBar(findViewById(R.id.appToolbar))
+
         imageMenu.setOnClickListener {
             drawer_layout.openDrawer(GravityCompat.START)
         }
+
         navigation_view.setNavigationItemSelectedListener(this)
         recycler_view.layoutManager = LinearLayoutManager(this)
         recycler_view.setHasFixedSize(true)
@@ -86,7 +90,6 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener,
                 songsList.addAll(userSongList)
                 songsList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.title }))
                 adapter = SongAdapter(songsList, this, this)
-
                 recycler_view.adapter = adapter
             }
 
@@ -155,7 +158,7 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener,
     override fun onItemClick(position: Int) {
         val intent = Intent(this, SongDetailActivity::class.java)
         val bundle = Bundle()
-        bundle.putParcelable("song", songsList[position])
+        bundle.putParcelable("song", adapter.songs[position])
         intent.putExtra("Bundle", bundle)
         startActivity(intent)
     }
@@ -173,12 +176,13 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener,
                 1 -> {
                     val intent = Intent(this, EditSongActivity::class.java)
                     val bundle = Bundle()
-                    bundle.putParcelable("song", songsList[position])
+                    bundle.putParcelable("song", adapter.songs[position])
                     intent.putExtra("Bundle", bundle)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
                     startActivity(intent)
                 }
                 2 -> {
-                    val songToDelete = songsList[position]
+                    val songToDelete = adapter.songs[position]
                     if (songToDelete in userSongList) {
                         firestoreDB.collection("users").document(Firebase.auth.currentUser!!.uid)
                             .collection("song")
@@ -222,12 +226,12 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener,
             }
             R.id.menu_add_song -> {
                 val intent = Intent(this, AddSongActivity::class.java)
-               // intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                // intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
             R.id.menu_public_songs -> {
                 val intent = Intent(this, SonglistActivity::class.java)
-              //  intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                //  intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
                 //zrobic sprawdzenie czy to aktualny intent, jak tak to nie starujemy nowego
 
@@ -243,7 +247,39 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener,
         } else {
             super.onBackPressed()
         }
+        if(!searchView.isIconified) {
+            searchView.setIconifiedByDefault(true)
+            searchView.onActionViewCollapsed()
+        } else {
+            super.onBackPressed()
+        }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_songlist, menu)
+
+        val searchItem = menu?.findItem(R.id.action_search)
+        searchView = searchItem?.actionView as SearchView
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(text: String?): Boolean {
+                searchView.clearFocus()
+                return true;
+            }
+
+            override fun onQueryTextChange(text: String?): Boolean {
+                adapter.filter.filter(text)
+                return false
+            }
+        })
+        return true
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        searchView.setQuery("", false)
+        searchView.setIconifiedByDefault(true)
+        invalidateOptionsMenu()
+    }
 }
 

@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+            android:id="@+id/menu_transposition"
+            android:title="Transponuj akordy" />
 
-    <item android:id="@+id/menu_transposition"
-            android:title="Transpozycja"
-            app:showAsAction="ifRoom" />
+    <item
+            android:id="@+id/menu_edit_song"
+            android:title="Edytuj piosenkę" />
+
 </menu>

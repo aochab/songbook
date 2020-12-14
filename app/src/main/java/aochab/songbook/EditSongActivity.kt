@@ -29,7 +29,8 @@ class EditSongActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_song)
 
-        image_save_song.setOnClickListener { saveSong() }
+        setSupportActionBar(findViewById(R.id.appToolbar))
+
         image_menu_add_song.setOnClickListener {
             drawer_layout.openDrawer(GravityCompat.START)
         }
@@ -48,20 +49,6 @@ class EditSongActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         inputSongwriter.setText(song.songwriter)
         inputSongLyrics.setText(lyric)
         inputSongChords.setText(chords)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_add_song, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_save_song -> {
-                saveSong()
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun saveSong() {
@@ -150,5 +137,19 @@ class EditSongActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         } else {
             super.onBackPressed()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_add_song, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_save_song -> {
+                saveSong()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

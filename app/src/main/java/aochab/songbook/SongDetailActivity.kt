@@ -3,53 +3,45 @@ package aochab.songbook
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Typeface
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.ColorFilter
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.text.TextUtils
-import android.text.method.MovementMethod
-import android.text.method.ScrollingMovementMethod
-import android.text.style.ForegroundColorSpan
-import android.text.style.StyleSpan
 import android.util.Log
-import android.util.TypedValue
-import android.view.*
-import android.view.animation.AnimationUtils
-import android.widget.TextView
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.activity_add_song.*
 import kotlinx.android.synthetic.main.activity_song_detail.*
-import kotlinx.android.synthetic.main.activity_song_detail.drawer_layout
-import java.lang.Math.pow
-import kotlin.math.max
-import kotlin.math.min
-import kotlin.math.pow
-import kotlin.math.sqrt
 
 class SongDetailActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     lateinit var originalChords: String
     lateinit var originalLyric: String
+    lateinit var song: Song
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_song_detail)
+        setSupportActionBar(findViewById(R.id.appToolbar))
+
+        val toolbar = findViewById<Toolbar>(R.id.appToolbar)
+        toolbar.overflowIcon?.colorFilter = PorterDuffColorFilter(
+            ContextCompat.getColor(this, R.color.colorAccent),
+            PorterDuff.Mode.SRC_ATOP
+        )
 
         val bundle = intent.getBundleExtra("Bundle")
-        val song = bundle?.getParcelable<Song>("song") as Song
-        supportActionBar?.title = song.title + "\n" + song.songwriter
+        song = bundle?.getParcelable<Song>("song") as Song
+        text_bar_songwriter.text = song.title + "\n" + song.songwriter
 
-        image_transpose_song.setOnClickListener {
-            val transposeChordsPopUp = TransposeChordsPopUp(originalLyric, originalChords)
-            transposeChordsPopUp.showPopUp(this.window.decorView)
-        }
         image_menu_song_detail.setOnClickListener {
             drawer_layout.openDrawer(GravityCompat.START)
         }
@@ -101,6 +93,29 @@ class SongDetailActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         } else {
             super.onBackPressed()
         }
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_transposition -> {
+                val transposeChordsPopUp = TransposeChordsPopUp(originalLyric, originalChords)
+                transposeChordsPopUp.showPopUp(this.window.decorView)
+            }
+            R.id.menu_edit_song -> {
+                val intent = Intent(this, EditSongActivity::class.java)
+                val bundle = Bundle()
+                bundle.putParcelable("song", song)
+                intent.putExtra("Bundle", bundle)
+                startActivity(intent)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_song_details, menu)
+        return true
     }
 
 }
