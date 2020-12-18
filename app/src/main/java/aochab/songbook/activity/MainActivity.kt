@@ -161,10 +161,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             .addOnSuccessListener {
                 Log.d(TAG, "User added to firebase cloud")
             }
-
-        val song = Song(0,"nowa")
-        val songRef = Firebase.firestore.collection("users").document(uid).collection("song").document(song.title)
-        songRef.set(song)
     }
 
 }
