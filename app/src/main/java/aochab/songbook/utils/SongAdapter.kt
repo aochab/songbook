@@ -1,14 +1,16 @@
-package aochab.songbook
+package aochab.songbook.utils
 
 import android.view.*
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import aochab.songbook.R
+import aochab.songbook.model.Song
 import kotlinx.android.synthetic.main.song_item.view.*
 
 class SongAdapter(
-    public val songs: MutableList<Song>,
+    val songs: MutableList<Song>,
     private val listener: OnItemClickListener,
     private val listenerContextMenu: OnContextMenuListener
 ) :

@@ -1,23 +1,21 @@
-package aochab.songbook
+package aochab.songbook.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import aochab.songbook.R
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_add_song.*
 import kotlinx.android.synthetic.main.activity_add_song.drawer_layout
-import kotlinx.android.synthetic.main.activity_songlist.*
 
 class AddSongActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 

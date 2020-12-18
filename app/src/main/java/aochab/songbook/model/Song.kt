@@ -1,4 +1,4 @@
-package aochab.songbook
+package aochab.songbook.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

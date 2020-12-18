@@ -1,20 +1,21 @@
-package aochab.songbook
+package aochab.songbook.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import aochab.songbook.utils.ConcatenateLyricAndChords
+import aochab.songbook.utils.PinchZoomOnTouchTextViewListener
+import aochab.songbook.R
+import aochab.songbook.utils.TransposeChordsPopUp
+import aochab.songbook.model.Song
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase

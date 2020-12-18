@@ -10,10 +10,10 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:name=".SongDetailActivity"
+                android:name=".activity.SongDetailActivity"
                 android:launchMode="singleTask" />
         <activity
-                android:name=".MainActivity"
+                android:name=".activity.MainActivity"
                 android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,21 +21,21 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".SonglistActivity"
+                android:name=".activity.SonglistActivity"
                 android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-                android:name=".AddSongActivity"
+                android:name=".activity.AddSongActivity"
                 android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-                android:name=".EditSongActivity"
+                android:name=".activity.EditSongActivity"
                 android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.DEFAULT" />

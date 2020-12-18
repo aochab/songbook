@@ -1,4 +1,4 @@
-package aochab.songbook
+package aochab.songbook.model
 
 data class User (
     val uid: String,

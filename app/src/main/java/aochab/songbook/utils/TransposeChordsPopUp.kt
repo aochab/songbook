@@ -1,4 +1,4 @@
-package aochab.songbook
+package aochab.songbook.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -7,6 +7,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
+import aochab.songbook.R
 import kotlinx.android.synthetic.main.activity_song_detail.view.*
 import kotlinx.android.synthetic.main.window_chords_transposition.view.*
 import kotlin.collections.ArrayList

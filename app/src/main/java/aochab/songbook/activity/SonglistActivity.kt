@@ -1,4 +1,4 @@
-package aochab.songbook
+package aochab.songbook.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +12,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import aochab.songbook.R
+import aochab.songbook.utils.SongAdapter
+import aochab.songbook.model.Song
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ListenerRegistration

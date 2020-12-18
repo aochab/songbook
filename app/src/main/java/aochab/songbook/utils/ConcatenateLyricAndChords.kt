@@ -1,6 +1,5 @@
-package aochab.songbook
+package aochab.songbook.utils
 
-import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Typeface
 import android.text.Spannable
