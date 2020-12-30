@@ -52,9 +52,7 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener,
         val extras = intent.extras
         if (extras != null) {
             val onlyUserSongs = extras.getBoolean("OnlyUserSongs")
-            if (onlyUserSongs) {
-                loadAllSongs = false
-            }
+            loadAllSongs = !onlyUserSongs
         }
 
         navigation_view.setNavigationItemSelectedListener(this)
@@ -246,11 +244,20 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener,
             }
             R.id.menu_public_songs -> {
                 val intent = Intent(this, SonglistActivity::class.java)
+                if(!loadAllSongs) {
+                    finish()
+                }
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                val onlyUserSongs = false
+                intent.putExtra("OnlyUserSongs", onlyUserSongs)
                 startActivity(intent)
             }
             R.id.menu_user_songs -> {
+                loadSongsList()
                 val intent = Intent(this, SonglistActivity::class.java)
+                if(!loadAllSongs) {
+                    finish()
+                }
                 val onlyUserSongs = true
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 intent.putExtra("OnlyUserSongs", onlyUserSongs)
