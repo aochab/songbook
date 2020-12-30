@@ -73,15 +73,19 @@ class SongDetailActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             }
             R.id.menu_add_song -> {
                 val intent = Intent(this, AddSongActivity::class.java)
-                // intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
             R.id.menu_public_songs -> {
                 val intent = Intent(this, SonglistActivity::class.java)
-                //  intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(intent)
-                //zrobic sprawdzenie czy to aktualny intent, jak tak to nie starujemy nowego
-
+            }
+            R.id.menu_user_songs -> {
+                val intent = Intent(this, SonglistActivity::class.java)
+                val onlyUserSongs = true
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.putExtra("OnlyUserSongs", onlyUserSongs)
+                startActivity(intent)
             }
         }
         drawer_layout.closeDrawer(GravityCompat.START)

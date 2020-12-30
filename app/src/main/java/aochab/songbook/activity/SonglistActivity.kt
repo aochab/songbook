@@ -248,7 +248,6 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener,
                 val intent = Intent(this, SonglistActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(intent)
-                //zrobic sprawdzenie czy to aktualny intent, jak tak to nie starujemy nowego
             }
             R.id.menu_user_songs -> {
                 val intent = Intent(this, SonglistActivity::class.java)
