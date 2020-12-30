@@ -13,8 +13,8 @@ import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import aochab.songbook.R
-import aochab.songbook.utils.SongAdapter
 import aochab.songbook.model.Song
+import aochab.songbook.utils.SongAdapter
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ListenerRegistration
@@ -37,6 +37,7 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener,
     private var publicSongList = mutableListOf<Song>()
     private var userSongList = mutableListOf<Song>()
     private lateinit var searchView: SearchView
+    private var loadAllSongs = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,32 +49,42 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener,
             drawer_layout.openDrawer(GravityCompat.START)
         }
 
+        val extras = intent.extras
+        if (extras != null) {
+            val onlyUserSongs = extras.getBoolean("OnlyUserSongs")
+            if (onlyUserSongs) {
+                loadAllSongs = false
+            }
+        }
+
         navigation_view.setNavigationItemSelectedListener(this)
         recycler_view.layoutManager = LinearLayoutManager(this)
         recycler_view.setHasFixedSize(true)
 
         loadSongsList()
 
-        firestoreListener = firestoreDB.collection("songs")
-            .addSnapshotListener { documentSnapshots, exception ->
-                if (exception != null) {
-                    Log.e(TAG, "Listen failed!", exception);
-                    return@addSnapshotListener
-                }
-                songsList.clear()
-                publicSongList.clear()
+        if (loadAllSongs) {
+            firestoreListener = firestoreDB.collection("songs")
+                .addSnapshotListener { documentSnapshots, exception ->
+                    if (exception != null) {
+                        Log.e(TAG, "Listen failed!", exception);
+                        return@addSnapshotListener
+                    }
+                    songsList.clear()
+                    publicSongList.clear()
 
-                for (doc in documentSnapshots!!) {
-                    val song = doc.toObject(Song::class.java)
-                    publicSongList.add(song)
-                }
-                songsList.addAll(publicSongList)
-                songsList.addAll(userSongList)
-                songsList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.title }))
-                adapter = SongAdapter(songsList, this, this)
+                    for (doc in documentSnapshots!!) {
+                        val song = doc.toObject(Song::class.java)
+                        publicSongList.add(song)
+                    }
+                    songsList.addAll(publicSongList)
+                    songsList.addAll(userSongList)
+                    songsList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.title }))
+                    adapter = SongAdapter(songsList, this, this)
 
-                recycler_view.adapter = adapter
-            }
+                    recycler_view.adapter = adapter
+                }
+        }
 
         firestoreDB.collection("users").document(Firebase.auth.currentUser!!.uid)
             .collection("song")
@@ -100,35 +111,37 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener,
 
     override fun onDestroy() {
         super.onDestroy()
-        firestoreListener!!.remove()
+        firestoreListener?.remove()
     }
 
     private fun loadSongsList() {
         val songsList = ArrayList<Song>()
-        firestoreDB.collection("songs")
-            .get()
-            .addOnCompleteListener { task ->
-                songsList.clear()
-                publicSongList.clear()
-                if (task.isSuccessful) {
-                    for (doc in task.result!!) {
-                        val song = doc.toObject(Song::class.java)
-                        publicSongList.add(song)
+        if (loadAllSongs) {
+            firestoreDB.collection("songs")
+                .get()
+                .addOnCompleteListener { task ->
+                    songsList.clear()
+                    publicSongList.clear()
+                    if (task.isSuccessful) {
+                        for (doc in task.result!!) {
+                            val song = doc.toObject(Song::class.java)
+                            publicSongList.add(song)
+                        }
+                        songsList.addAll(publicSongList)
+                        songsList.addAll(userSongList)
+                        songsList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.title }))
+                        adapter = SongAdapter(songsList, this, this)
+                        recycler_view!!.itemAnimator = DefaultItemAnimator()
+                        recycler_view!!.adapter = adapter
+                    } else {
+                        Log.d(
+                            MainActivity.TAG,
+                            "Error getting documents: ",
+                            task.exception
+                        )
                     }
-                    songsList.addAll(publicSongList)
-                    songsList.addAll(userSongList)
-                    songsList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER, { it.title }))
-                    adapter = SongAdapter(songsList, this, this)
-                    recycler_view!!.itemAnimator = DefaultItemAnimator()
-                    recycler_view!!.adapter = adapter
-                } else {
-                    Log.d(
-                        MainActivity.TAG,
-                        "Error getting documents: ",
-                        task.exception
-                    )
                 }
-            }
+        }
 
         firestoreDB.collection("users").document(Firebase.auth.currentUser!!.uid)
             .collection("song")
@@ -229,15 +242,20 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener,
             }
             R.id.menu_add_song -> {
                 val intent = Intent(this, AddSongActivity::class.java)
-                // intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
             R.id.menu_public_songs -> {
                 val intent = Intent(this, SonglistActivity::class.java)
-                //  intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(intent)
                 //zrobic sprawdzenie czy to aktualny intent, jak tak to nie starujemy nowego
-
+            }
+            R.id.menu_user_songs -> {
+                val intent = Intent(this, SonglistActivity::class.java)
+                val onlyUserSongs = true
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.putExtra("OnlyUserSongs", onlyUserSongs)
+                startActivity(intent)
             }
         }
         drawer_layout.closeDrawer(GravityCompat.START)
@@ -250,7 +268,7 @@ class SonglistActivity : AppCompatActivity(), SongAdapter.OnItemClickListener,
         } else {
             super.onBackPressed()
         }
-        if(!searchView.isIconified) {
+        if (!searchView.isIconified) {
             searchView.setIconifiedByDefault(true)
             searchView.onActionViewCollapsed()
         } else {

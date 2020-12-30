@@ -68,9 +68,10 @@
                     android:id="@+id/inputSongwriter" />
 
             <TextView
-                    android:text="Ilość linii tekstu i akordów musi być taka sama"
+                    android:text="Liczba linii tekstu i akordów musi być taka sama."
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textAlignment="center"
                     android:id="@+id/textView" />
 
             <LinearLayout

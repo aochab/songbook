@@ -12,7 +12,7 @@
 
     <item
             android:id="@+id/menu_public_songs"
-            android:title="Publiczne piosenki" />
+            android:title="Wszystkie piosenki" />
 
     <item
             android:id="@+id/menu_sign_out"

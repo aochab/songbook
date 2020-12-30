@@ -29,8 +29,9 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="10dp"
+                    android:layout_margin="5dp"
                     android:text="Transponuj akordy"
-                    android:textColor="@color/text_color"
+                    android:textColor="@color/white_color"
                     android:background="@color/colorPrimary" />
 
             <ScrollView
@@ -48,78 +49,91 @@
                             android:id="@+id/transpose_minus_6_button"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            style="@style/FirebaseUI.Button"
                             android:text="-6" />
 
                     <Button
                             android:id="@+id/transpose_minus_5_button"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            style="@style/FirebaseUI.Button"
                             android:text="-5" />
 
                     <Button
                             android:id="@+id/transpose_minus_4_button"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            style="@style/FirebaseUI.Button"
                             android:text="-4" />
 
                     <Button
                             android:id="@+id/transpose_minus_3_button"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            style="@style/FirebaseUI.Button"
                             android:text="-3" />
 
                     <Button
                             android:id="@+id/transpose_minus_2_button"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            style="@style/FirebaseUI.Button"
                             android:text="-2" />
 
                     <Button
                             android:id="@+id/transpose_minus_1_button"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            style="@style/FirebaseUI.Button"
                             android:text="-1" />
 
                     <Button
                             android:id="@+id/transpose_0_button"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="0" />
+                            style="@style/FirebaseUI.Button"
+                            android:text="Oryginalna" />
 
                     <Button
                             android:id="@+id/transpose_plus_1_button"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            style="@style/FirebaseUI.Button"
                             android:text="+1" />
 
                     <Button
                             android:id="@+id/transpose_plus_2_button"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            style="@style/FirebaseUI.Button"
                             android:text="+2" />
 
                     <Button
                             android:id="@+id/transpose_plus_3_button"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            style="@style/FirebaseUI.Button"
                             android:text="+3" />
 
                     <Button
                             android:id="@+id/transpose_plus_4_button"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            style="@style/FirebaseUI.Button"
                             android:text="+4" />
 
                     <Button
                             android:id="@+id/transpose_plus_5_button"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            style="@style/FirebaseUI.Button"
                             android:text="+5" />
 
                     <Button
                             android:id="@+id/transpose_plus_6_button"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            style="@style/FirebaseUI.Button"
                             android:text="+6" />
                 </LinearLayout>
 

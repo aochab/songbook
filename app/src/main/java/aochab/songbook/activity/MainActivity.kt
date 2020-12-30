@@ -1,19 +1,20 @@
 package aochab.songbook.activity
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import aochab.songbook.R
-import aochab.songbook.model.Song
 import aochab.songbook.model.User
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -69,14 +70,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             var userToken: String? = null
             try {
                 val account: GoogleSignInAccount? = task.getResult(ApiException::class.java)!!
                 if (account != null) {
-                    //     userToken = account.idToken
                     Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
                     firebaseAuthWithGoogle(account.idToken!!)
                 }
@@ -97,7 +96,25 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         if (v != null) {
             when (v) {
                 v.google_sign_in_button -> signInByGoogle()
-                v.anonymous_sign_in_button -> signInAnonymously()
+                v.anonymous_sign_in_button -> {
+                    val dialogClickListener =
+                        DialogInterface.OnClickListener { dialog, which ->
+                            when (which) {
+                                DialogInterface.BUTTON_POSITIVE -> {
+                                    signInAnonymously()
+                                }
+                                DialogInterface.BUTTON_NEGATIVE -> {
+                                }
+                            }
+                        }
+
+                    val builder = AlertDialog.Builder(this)
+                    builder.setMessage("Jako anonimowy użytkownik, " +
+                            "dodane piosenki będą dostępne jedynie do " +
+                            "czasu wylogowania się z aplikacji. Czy chcesz kontynuować?")
+                        .setPositiveButton("Tak", dialogClickListener)
+                        .setNegativeButton("Anuluj", dialogClickListener).show()
+                }
             }
         }
     }
@@ -162,6 +179,5 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 Log.d(TAG, "User added to firebase cloud")
             }
     }
-
 }
 
